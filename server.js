@@ -19,10 +19,10 @@ app.use(
   })
 );
 
-// const cron = require('./cron');
 const users = require("./routes/api/users");
 const address = require("./routes/api/address");
 const gameAll = require("./routes/api/game");
+const { Bet } = require("./modals/game");
 
 // passport middleware
 app.use(passport.initialize());
@@ -81,6 +81,11 @@ io.on("connection", async () => {
   });
   job.start();
 });
+
+cron.schedule("* 23 */2 * *", () => { // every two days, schedule randomNum schema to get empty
+  console.log('in cron ---------------------')
+  Bet.deleteMany({});
+})
 
 httpServer.listen(port, () => {
   console.log("server running at localhost:4000");
